@@ -43,7 +43,7 @@ impl BathyPoint {
 }
 
 impl BathySurface {
-    #[cfg(not(wasm32))]
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn from_path(path: &str) -> Result<BathySurface, Box<dyn Error>> {
         use std::fs::File;
         use std::io::prelude::*;

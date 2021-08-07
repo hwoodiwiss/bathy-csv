@@ -43,8 +43,19 @@ impl BathyPoint {
 }
 
 impl BathySurface {
+    #[cfg(not(wasm32))]
     pub fn from_path(path: &str) -> Result<BathySurface, Box<dyn Error>> {
-        let mut reader = csv::Reader::from_path(path)?;
+        use std::fs::File;
+        use std::io::prelude::*;
+
+        let mut file = File::open(path)?;
+        let mut file_data = Vec::new();
+        file.read_to_end(&mut file_data)?;
+        BathySurface::from_csv(&file_data[..])
+    }
+
+    pub fn from_csv(csv_data: &[u8]) -> Result<BathySurface, Box<dyn Error>> {
+        let mut reader = csv::Reader::from_reader(csv_data);
 
         let mut points = Vec::<BathyPoint>::new();
         for result in reader.deserialize() {

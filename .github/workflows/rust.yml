@@ -15,11 +15,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Install WASM Pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - name: Install WASM Toolchain
         run: rustup target add wasm32-unknown-unknown
       - name: Build
         run: cargo build --verbose
       - name: Build WASM
         run: cargo build --target wasm32-unknown-unknown --verbose
+      - name: WASM Pack
+        run: wasm-pack build
       - name: Run tests
         run: cargo test --verbose
